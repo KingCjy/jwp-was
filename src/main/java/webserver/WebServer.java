@@ -4,7 +4,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.*;
 
-import controller.CommonController;
+import common.CommonController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import web.*;

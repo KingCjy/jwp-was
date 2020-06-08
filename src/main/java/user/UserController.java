@@ -1,4 +1,4 @@
-package controller;
+package user;
 
 import annotations.Controller;
 import annotations.RequestMapping;
@@ -7,27 +7,25 @@ import http.Cookie;
 import http.HttpMethod;
 import http.HttpRequest;
 import http.HttpResponse;
-import user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import web.servlet.ModelAndView;
 
+/**
+ * @author KingCjy
+ */
 @Controller
-public class CommonController {
+@RequestMapping("/user")
+public class UserController {
 
-    private static final Logger logger = LoggerFactory.getLogger(CommonController.class);
+    private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
-    @RequestMapping("/index.html")
-    public ModelAndView index() {
-        return ModelAndView.from("index");
-    }
-
-    @RequestMapping("/user/form.html")
+    @RequestMapping("/form.html")
     public ModelAndView userForm() {
         return ModelAndView.from("user/form");
     }
 
-    @RequestMapping(value = "/user/create", method = HttpMethod.POST)
+    @RequestMapping(value = "/create", method = HttpMethod.POST)
     public ModelAndView signUp(HttpRequest httpRequest) {
 
         String userId = httpRequest.getParameter("userId");
@@ -42,17 +40,17 @@ public class CommonController {
         return ModelAndView.from("redirect:/index.html");
     }
 
-    @RequestMapping("/user/login.html")
+    @RequestMapping("/login.html")
     public ModelAndView loginView() {
         return ModelAndView.from("user/login");
     }
 
-    @RequestMapping("/user/login_failed.html")
+    @RequestMapping("/login_failed.html")
     public ModelAndView loginFailView() {
         return ModelAndView.from("user/login_failed");
     }
 
-    @RequestMapping(value = "/user/login", method = HttpMethod.POST)
+    @RequestMapping(value = "/login", method = HttpMethod.POST)
     public ModelAndView login(HttpRequest httpRequest, HttpResponse httpResponse) {
 
         String userId = httpRequest.getParameter("userId");
@@ -70,7 +68,7 @@ public class CommonController {
         return ModelAndView.from("redirect:/index.html");
     }
 
-    @RequestMapping("/user/list.html")
+    @RequestMapping("/list.html")
     public ModelAndView userListView(HttpRequest httpRequest) {
 
         Cookie loginedCookie = httpRequest.getCookie("logined");
