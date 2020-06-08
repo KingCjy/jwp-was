@@ -20,6 +20,12 @@ public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
 
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     @RequestMapping("/form.html")
     public ModelAndView userForm() {
         return ModelAndView.from("user/form");
@@ -33,10 +39,8 @@ public class UserController {
         String name = httpRequest.getParameter("name");
         String email = httpRequest.getParameter("email");
 
-        User user = new User(userId, password, name, email);
-        DataBase.addUser(user);
+        userService.signUp(userId, password, name, email);
 
-        logger.info("회원가입 성공 user={}" + user);
         return ModelAndView.from("redirect:/index.html");
     }
 
@@ -56,29 +60,25 @@ public class UserController {
         String userId = httpRequest.getParameter("userId");
         String password = httpRequest.getParameter("password");
 
-        User user = DataBase.findUserById(userId);
+        boolean login = userService.login(httpResponse, userId, password);
 
-        if(user == null || !password.equals(user.getPassword())) {
-            logger.info("로그인 실패 id={}, pw={}", userId, password);
+        if(!login) {
             return ModelAndView.from("redirect:/user/login_failed.html");
         }
 
-        httpResponse.addCookie(new Cookie("logined", "true"));
-        logger.info("로그인 성공 id={}, pw={}", userId, password);
         return ModelAndView.from("redirect:/index.html");
     }
 
     @RequestMapping("/list.html")
     public ModelAndView userListView(HttpRequest httpRequest) {
 
-        Cookie loginedCookie = httpRequest.getCookie("logined");
-
-        if(loginedCookie == null || !"true".equals(loginedCookie.getValue())) {
+        boolean isLoggedIn = userService.isLoggedIn(httpRequest);
+        if(!isLoggedIn) {
             return ModelAndView.from("redirect:/user/login.html");
         }
 
         ModelAndView modelAndView = ModelAndView.from("user/list");
-        modelAndView.addAttribute("users", DataBase.findAll());
+        modelAndView.addAttribute("users", userService.findAllUsers());
         return modelAndView;
     }
 }
