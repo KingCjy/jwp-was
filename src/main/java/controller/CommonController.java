@@ -7,7 +7,7 @@ import http.Cookie;
 import http.HttpMethod;
 import http.HttpRequest;
 import http.HttpResponse;
-import model.User;
+import user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import web.servlet.ModelAndView;
